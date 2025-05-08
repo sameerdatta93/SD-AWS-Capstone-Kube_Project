@@ -13,14 +13,6 @@ sudo yum install docker -y
 sudo systemctl enable docker
 sudo systemctl start docker
 
-sudo yum install git -y
-
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-delay 5
-source ~/.bashrc
-delay 2
-nvm install --lts
-
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 delay 2
 chmod 700 get_helm.sh
