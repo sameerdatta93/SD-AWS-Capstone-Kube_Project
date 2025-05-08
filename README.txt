@@ -56,10 +56,11 @@ chown -R ec2-user:ec2-user /home/ec2-user/SD-AWS-Capstone-Kube_Project
 		kubectl get service -n dev
 18. Post validation, we can now try to deploy a new version of events-web (front-end layer).
 	We already have created a green deployment (with name deployment_green). So there are two deployment files present inside events-website pointing to different versions. Currently you can see v3 in ui and after dpeloyment it will be v4 on ui.
-	[The green deployment got already created when we executed the command 'kubectl apply -k resources/overlays/dev/app/'; as teo deployments are already created]
+	[The green deployment got already created when we executed the command 'kubectl apply -k resources/overlays/dev/app/'; as two deployments are already created]
 	Now lets change manually the service.yaml to point to green deployment using below command:
 	     'vim resources/base/events-website/service.yaml' -> change version to v2.0 from v1.0 under selector and save it (Esc -> :wq!)
-	Once updated we can apply and check if we are able to get the new version in the browser.
+	Once updated we can apply and check if we are able to get the new version in the browser. We can apply using below command:
+	kubectl apply -k resources/overlays/dev/app/
 19. Once deployment is done, we can delete the kube infra using below commands.
 		kubectl delete -k resources/overlays/dev/app/
 		kubectl delete -k resources/overlays/dev/init/
