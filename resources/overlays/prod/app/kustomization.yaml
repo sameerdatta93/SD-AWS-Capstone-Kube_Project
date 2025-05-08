@@ -1,3 +1,7 @@
 namespace: prod
 resources:
   - ../../../base
+configMapGenerator:
+  - name: db-config
+    literals:
+      - DB_HOST=database-server-mariadb.prod
