@@ -26,11 +26,14 @@ spec:
               memory: "128Mi"
               cpu: "100m"
             limits:
-              memory: "256Mi"
-              cpu: "200m"
+              memory: "128Mi"
+              cpu: "100m"
         env:
         - name: DBHOST
-          value: "database-server-mariadb.default"
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_HOST
         - name: DBUSER
           value: "root"
         - name: DBPASSWORD
@@ -40,3 +43,9 @@ spec:
               key: mariadb-root-password
         - name: DBDATABASE
           value: "events_db"
+      - name: cpu-loader
+        image: progrium/stress
+        args: ["--cpu", "1"]
+        resources:
+          limits:
+            cpu: "200m"
