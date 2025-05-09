@@ -34,23 +34,24 @@ chown -R ec2-user:ec2-user /home/ec2-user/SD-AWS-Capstone-Kube_Project
 	kubectl get nodes
 11. Now lets create namespace, jobs, deployments, services, hpa. (Built separate layers for the namespaces. Lets create the resources for dev namespace now.)
 12. Run below command to create dev namespace. This will create dev namespace
-		kubectl apply -f resources/overlays/dev/app/namespace.yaml
+	kubectl apply -f resources/overlays/dev/app/namespace.yaml
 13. Lets mark gpu as the default storage class which is a required for database which we will be installing.
-		kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+	kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 14. Run below command to install helm mariadb for dev namespace.
-		helm install database-server oci://registry-1.docker.io/bitnamicharts/mariadb --namespace dev
-	The installation can be verified using commands 'helm list -an dev'
-	Ensure database-server pod is running using command 'kubectl get pods -n dev'
+	helm install database-server oci://registry-1.docker.io/bitnamicharts/mariadb --namespace dev
+    The installation can be verified using commands 'helm list -an dev'
+    Ensure database-server pod is running using command 'kubectl get pods -n dev'
 15. Once mariadb is installed, we can run a job which will just initialize the database with required table and dummy details. [The job will be fetched from docker repo.]
-		kubectl apply -k resources/overlays/dev/init/
-	We can check if the pods is running or not using 'kubectl get pods -n dev'	
-	Logs for the job can be checked using command 'kubectl logs <pod-name> -n dev'
+	kubectl apply -k resources/overlays/dev/init/
+   We can check if the pods is running or not using 'kubectl get pods -n dev'	
+   Logs for the job can be checked using command 'kubectl logs <pod-name> -n dev'
 16. After db setup, we can now deploy the application using below command.
-		kubectl apply -k resources/overlays/dev/app/
-	This will create deployments for events-api and events-website along with their respective service (LB for events-api and clusterIP for events-website) and HPA. Use below commands to verify: [The apps will be fetched from docker repo]
+	kubectl apply -k resources/overlays/dev/app/
+     This will create deployments for events-api and events-website along with their respective service (LB for events-api and clusterIP for events-website) and HPA. Use below commands to verify: [The apps will be fetched from docker repo]
 	kubectl get deploy -n dev
 	kubectl get service -n dev
 	kubectl get hpa -n dev
+    Lets wait for few minutes and then try to access the load balancer dns. [Since stress container was already included in events-api deployment, pods of events-api will get scaled automatically as cpu utilization will be > 30%]
 17. We can use the Load balancer dns and try to access it in the browser on port 80:
 		kubectl get service -n dev
 18. Post validation, we can now try to deploy a new version of events-website (front-end layer).
@@ -61,9 +62,9 @@ chown -R ec2-user:ec2-user /home/ec2-user/SD-AWS-Capstone-Kube_Project
 	Once updated we can apply and check if we are able to get the new version in the browser. We can apply using below command:
 	kubectl apply -k resources/overlays/dev/app/
 19. Once deployment is done, we can delete the kube infra using below commands.
-		kubectl delete -k resources/overlays/dev/app/
-		kubectl delete -k resources/overlays/dev/init/
-		kubectl delete -f resources/overlays/dev/app/namespace.yaml
+	kubectl delete -k resources/overlays/dev/app/
+	kubectl delete -k resources/overlays/dev/init/
+	kubectl delete -f resources/overlays/dev/app/namespace.yaml
 
 	Cluster can be destroyed using below command:
 		eksctl delete cluster -f cluster.yaml 
