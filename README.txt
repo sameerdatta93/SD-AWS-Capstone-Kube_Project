@@ -32,7 +32,7 @@ chown -R ec2-user:ec2-user /home/ec2-user/SD-AWS-Capstone-Kube_Project
 10. Once cluster is created, it can be validated using below few commands:
 	kubectl cluster-info
 	kubectl get nodes
-11. Now go inside folder named resources to create namespace, jobs, deployments, services, hpa (Built separate layers for the namespaces. Lets create the resources for dev namespace now.)
+11. Now lets create namespace, jobs, deployments, services, hpa. (Built separate layers for the namespaces. Lets create the resources for dev namespace now.)
 12. Run below command to create dev namespace. This will create dev namespace
 		kubectl apply -f resources/overlays/dev/app/namespace.yaml
 13. Lets mark gpu as the default storage class which is a required for database which we will be installing.
